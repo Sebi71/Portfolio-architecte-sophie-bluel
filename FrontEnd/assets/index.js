@@ -58,7 +58,7 @@ function deleteWorks (){
 
 
 /**Function CREATE new works API*/
-function createGallery(categories = null){
+function createGallery(filterWorks){
     /**Delete gallery(works) */
     deleteWorks()
 
@@ -85,18 +85,18 @@ function createGallery(categories = null){
 };
 
 
-        /**FILTER */
+/**FILTER */
 /**Adding filters of categories to filter work in the gallery */    
 function createFilter(){
     /**Creating a new object in the table*/
     categories.unshift({id: 0, name: "Tous"});
-
+    
     /**Creating div element for categories */
     const portefolio = document.getElementById("portfolio");
     const categoriesElement = document.createElement("div");
     categoriesElement.classList.add("categories");
     portefolio.insertBefore(categoriesElement, galleryElement);
-
+    
     /**Looping on each category */
     categories.forEach((categoryElement, i) => {
         /**Creation of buttons for different categories */
@@ -112,13 +112,13 @@ function createFilter(){
         /**Change catégory witch function addEventListener click */
         categoryBtn.addEventListener("click", (e) => {
             const selectedCategoryId = parseInt(e.target.value);
-
+            
             let filterWorks = works;
             if (selectedCategoryId !== 0) {
                 filterWorks = works.filter(work => {
                 return work.categoryId === selectedCategoryId;
                 });
-            } 
+            }
             createGallery();
             console.log(filterWorks);
             
@@ -137,3 +137,5 @@ function createFilter(){
         });
     });  
 };  
+
+
