@@ -58,71 +58,70 @@ function deleteWorks (){
 
 
 /**Function CREATE new works API*/
-function createGallery(filterWorks){
+function createGallery(categoryId = null){
     /**Delete gallery(works) */
     deleteWorks()
 
+    /**Determine which works array to use based on category */
+    const displayWorks = categoryId ? works.filter(work => work.categoryId === categoryId) : works;
     
-    
-    /**Looping on each work */
-    works.forEach(work => {
-            /**Creation of work item */
+    /**Loop through each work */
+    displayWorks.forEach(work => {
+            /**Create a <figure> element for each work */
             const figure = document.createElement("figure");
-            
+            /**Create an <img> element to display the work's image */
             const imageElement = document.createElement("img");
             imageElement.src = work.imageUrl;
             imageElement.setAttribute("alt", work.title);
-
+            /**Create a <figcaption> element to display the title of the work */
             const titleImage = document.createElement("figcaption");
             titleImage.innerText = work.title;
-            
+            /**Add the elements to the gallery */
             galleryElement.appendChild(figure);
             figure.appendChild(imageElement);
             figure.appendChild(titleImage);
         
 
     });
+    console.log(displayWorks);
 };
 
 
 /**FILTER */
-/**Adding filters of categories to filter work in the gallery */    
+/**Adding filters of categories to filter works in the gallery */    
 function createFilter(){
-    /**Creating a new object in the table*/
+    /**Adding a default category "Tous" (All)*/
     categories.unshift({id: 0, name: "Tous"});
     
-    /**Creating div element for categories */
+    /**Creating <div> element for categories */
     const portefolio = document.getElementById("portfolio");
     const categoriesElement = document.createElement("div");
     categoriesElement.classList.add("categories");
     portefolio.insertBefore(categoriesElement, galleryElement);
     
-    /**Looping on each category */
+    /**Loop through each category */
     categories.forEach((categoryElement, i) => {
-        /**Creation of buttons for different categories */
+        /**Create buttons for different categories */
         const categoryBtn = document.createElement("button");
         categoryBtn.innerText = categoryElement.name;
         categoryBtn.value = categoryElement.id;
         categoryBtn.classList.add("category-btn");
+        /**Add a class to the first button */
         if(i === 0){
             categoryBtn.classList.add("category-selected")
         };
+        /**Add buttons to the categories <div> */
         categoriesElement.appendChild(categoryBtn);
         
         /**Change catégory witch function addEventListener click */
         categoryBtn.addEventListener("click", (e) => {
+            /**Get the selected category ID */
             const selectedCategoryId = parseInt(e.target.value);
             
-            let filterWorks = works;
-            if (selectedCategoryId !== 0) {
-                filterWorks = works.filter(work => {
-                return work.categoryId === selectedCategoryId;
-                });
-            }
-            createGallery();
-            console.log(filterWorks);
+            /**Update the gallery */
+            createGallery(selectedCategoryId);
             
-            /**change color button */
+            /**change color of the button */
             const filterColorCategory = document.querySelectorAll(".category-btn");
             filterColorCategory.forEach((filterColor, i) => {
                 if(i === selectedCategoryId){
