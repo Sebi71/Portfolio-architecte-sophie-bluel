@@ -9,7 +9,7 @@
 	<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Work+Sans&display=swap" rel="stylesheet">
 	<meta name="description" content="">
 	<link rel="stylesheet" href="./assets/style.css">
-	<script src="./assets/login.js" defer></script>
+	<script src="./assets/js/login.js" defer></script>
 </head>
 <body>
 <header>
@@ -29,9 +29,11 @@
         <form class="identifier-form" action="#" method="get">
             <label for="mail">E-mail</label>
             <input type="email" id="mail" name="E-mail" required>
+			<span class="error-mail">Vérifiez l'adresse mail saisie !</span>
             <label for="password">Mot de passe</label>
             <input type="password" id="password" name="password" required>
-            <input type="submit" value="Se connecter" id="submit">
+			<span class="error-password">Oups ! Mot de passe incorrect !</span>
+            <input type="submit" value="Se connecter" class="submit-disabled" id="submit">
         </form>
         <p>Mot de passe oublié</p>
     </section>

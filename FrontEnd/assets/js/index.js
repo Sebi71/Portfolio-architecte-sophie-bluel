@@ -83,7 +83,6 @@ function createGallery(categoryId = null){
         
 
     });
-    console.log(displayWorks);
 };
 
 

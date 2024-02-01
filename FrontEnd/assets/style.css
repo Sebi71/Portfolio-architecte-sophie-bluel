@@ -250,7 +250,6 @@ footer nav ul {
 	height: 36px;
 	font-size: 14px;
 	margin-top: 37px;
-	cursor: pointer;
 }
 
 .formulary-login p {
@@ -261,4 +260,29 @@ footer nav ul {
 	text-decoration-line: underline;
 	cursor: pointer;
 	
+}
+
+.submit-disabled {
+	font-family: 'Syne';
+	font-weight: 700;
+	color: white;
+	background-color: rgb(168, 168, 168);
+	margin : 2em auto ;
+	width: 180px;
+	text-align: center;
+	border-radius: 60px ;
+}
+
+.error-mail {
+	color: red;
+	font-weight: 700;
+	margin-top: 6px;
+	display: none;
+}
+
+.error-password {
+	color: red;
+	font-weight: 700;
+	margin-top: 6px;
+	display: none;
 }
