@@ -136,4 +136,15 @@ function createFilter(){
     });  
 };  
 
+/****************************************************** */
 
+
+const header = document.querySelector("header");
+const editMode = '<div class="edit-mode"><i class="logo-edit fa-regular fa-pen-to-square"></i><p>Mode édition</p></div>';
+
+function adminMode(){
+    if(localStorage.getItem("token")){
+         header.insertAdjacentHTML("afterbegin", editMode);
+    }
+}
+adminMode()
