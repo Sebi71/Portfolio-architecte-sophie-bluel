@@ -8,6 +8,14 @@ let categories = [];
 /** Access to gallery element*/
 const galleryElement = document.querySelector(".gallery");
 
+const portfolio = document.getElementById("portfolio");
+
+const header = document.querySelector("header");
+
+const logout = document.querySelector('li a[href="login.html"]');
+
+const myProjets = document.querySelector("#portfolio h2");
+
 
 /* ******** */
 /* API LIST */
@@ -50,9 +58,8 @@ fetch("http://localhost:5678/api/categories")
 
 /**Function DELETE old image HTML */
 function deleteWorks (){
-    const oldGallery = document.querySelector(".gallery");
-    while (oldGallery.firstChild){
-        oldGallery.removeChild(oldGallery.firstChild)
+    while (galleryElement.firstChild){
+        galleryElement.removeChild(galleryElement.firstChild)
     }
 }
 
@@ -93,10 +100,9 @@ function createFilter(){
     categories.unshift({id: 0, name: "Tous"});
     
     /**Creating <div> element for categories */
-    const portefolio = document.getElementById("portfolio");
     const categoriesElement = document.createElement("div");
     categoriesElement.classList.add("categories");
-    portefolio.insertBefore(categoriesElement, galleryElement);
+    portfolio.insertBefore(categoriesElement, galleryElement);
     
     /**Loop through each category */
     categories.forEach((categoryElement, i) => {
@@ -134,17 +140,47 @@ function createFilter(){
 
         });
     });  
+    
+    adminMode();
 };  
 
 /****************************************************** */
 
-
-const header = document.querySelector("header");
-const editMode = '<div class="edit-mode"><i class="logo-edit fa-regular fa-pen-to-square"></i><p>Mode édition</p></div>';
-
 function adminMode(){
-    if(localStorage.getItem("token")){
-         header.insertAdjacentHTML("afterbegin", editMode);
-    }
+    if(sessionStorage.getItem("token")){
+        const editMode = `<div class="edit-mode">
+        <i class="logo-edit fa-regular fa-pen-to-square"></i>
+        <p>Mode édition</p>
+        </div>`;
+        header.style.marginTop = "88px";
+        header.insertAdjacentHTML("afterbegin", editMode);
+        
+        logout.textContent = "logout";
+        logout.href = "#";
+        
+        logout.addEventListener("click", () => {
+            sessionStorage.removeItem("token");
+            location.reload();
+        });
+        /***************************************** */
+        const containerDiv = document.createElement("div");
+        containerDiv.classList.add("edit-projets");
+        const toModified = `<a href="#" class="lien-modifier">
+        <i class="fa-regular fa-pen-to-square"></i>
+        <p>modifier</p>
+        </a>`;
+        
+        portfolio.insertBefore(containerDiv, portfolio.firstChild)
+        containerDiv.appendChild(myProjets);
+        
+        myProjets.insertAdjacentHTML("afterend", toModified);
+
+        
+
+        const categoriesButtons = document.querySelectorAll('.category-btn');
+        categoriesButtons.forEach(button => {
+            button.style.display = 'none';
+        });
+    };
 }
-adminMode()
+

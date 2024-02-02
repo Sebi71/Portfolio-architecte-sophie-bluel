@@ -71,7 +71,7 @@ form.addEventListener("submit", (e) => {
     .then(data => {
         /**Change button state, storage of the token and redirection to the index page */
         toggleSubmitBtn();
-        localStorage.setItem("token", data.token);
+        sessionStorage.setItem("token", data.token);
         location.href = "index.html";
     })
     .catch(error => {
