@@ -2,6 +2,7 @@
 /* DECLARATION OF GLOBAL VARIABLES */
 /* ******************************* */
 
+/**Acces API */
 let works = [];
 let categories = [];
 
@@ -23,6 +24,8 @@ const myProjets = document.querySelector("#portfolio h2");
 /**Default variable for modal access */
 let modal = null;
 
+/**Access to the element galley in the modal*/
+const modalContentGallery = document.querySelector(".gallery-list");
 
 /* ******** */
 /* API LIST */
@@ -66,9 +69,7 @@ fetch("http://localhost:5678/api/categories")
 
 /**Function DELETE old image HTML */
 function deleteWorks (){
-    while (galleryElement.firstChild){
-        galleryElement.removeChild(galleryElement.firstChild)
-    }
+    galleryElement.innerHTML = "";
 };
 
 
@@ -84,6 +85,7 @@ function createGallery(categoryId = null){
     displayWorks.forEach(work => {
             /**Create a <figure> element for each work */
             const figure = document.createElement("figure");
+            figure.setAttribute("id", `work-${work.id}`);
             /**Create an <img> element to display the work's image */
             const imageElement = document.createElement("img");
             imageElement.src = work.imageUrl;
@@ -213,6 +215,8 @@ function openModal (e) {
 
     /**Show modal with flex */
     modal.style.display = "flex";
+    addModal.style.display = "none";
+    deleteModal.style.display = "block";
 
     /**Change accessibility attribute */
     modal.removeAttribute("aria-hidden");
@@ -220,12 +224,11 @@ function openModal (e) {
 
     /**Add event listeners for closing the modal */
     modal.addEventListener("click", closeModal);
-    modal.querySelector("#close").addEventListener("click", closeModal);
+    modal.querySelector(".close-deleted").addEventListener("click", closeModal);
     modal.querySelector(".modal-stop").addEventListener("click", stopPropagation);
-    
     /**Call function to display content */
-    displayWorksModal()
-};
+    displayWorksModal();
+ };
 
 
 /**Function for close the modal */
@@ -235,14 +238,14 @@ function closeModal (e) {
 
     /**Hide modal */
     modal.style.display = "none";
-
+    
     /**Change accessibility attribute */
     modal.setAttribute("aria-hidden", "true");
     modal.removeAttribute("aria-modal"); 
 
     /**Remove event listeners */
     modal.removeEventListener("click", closeModal);
-    modal.querySelector("#close").removeEventListener("click", closeModal);
+    modal.querySelector(".close-deleted").removeEventListener("click", closeModal);
     modal.querySelector(".modal-stop").removeEventListener("click", stopPropagation);
   
     /**Reset modal variable to null */
@@ -264,9 +267,6 @@ window.addEventListener("keydown", (e) => {
 
 /**Function to display the content of the modal */
 function displayWorksModal () {
-    /**Access to the element */
-    const modalContentGallery = document.querySelector(".gallery-list");
-
     /**Reset existing content */
     modalContentGallery.innerHTML = null;
 
@@ -274,7 +274,8 @@ function displayWorksModal () {
     works.forEach(work => {
         /**Creating elements */
         const figure = document.createElement("figure");
-        figure.setAttribute("class", "cute-gallery")
+        figure.setAttribute("class", "cute-gallery");
+        figure.setAttribute("id", `modal-${work.id}`)
         const imageModal = document.createElement("img");
         imageModal.src = work.imageUrl;
         imageModal.setAttribute("class", "modal-img");
@@ -283,18 +284,76 @@ function displayWorksModal () {
         modalContentGallery.appendChild(figure);
         figure.appendChild(imageModal);
         
-        /**Add a trash can icon with the work ID */
-        const trash = `<i class="fa-solid fa-trash-can delete-work" id = "${work.id}"></i>`
+        /**Add a trash icon with the work ID */
+        const trash = `<i class="fa-solid fa-trash-can delete-work" id = "trash-${work.id}"></i>`
         figure.insertAdjacentHTML("afterbegin", trash);
         
         /**Add an event listener for deleting the work on click of the trash icon */
-        const trashSelected = document.getElementById(`${work.id}`);
+        const trashSelected = document.getElementById(`trash-${work.id}`);
         trashSelected.addEventListener("click", () => deleteWorksModal(work.id));
         
     })
 };
 
+
+
+
 /**Function to delete a work */
 function deleteWorksModal(id) {
-    console.log("Id n°", id);
+    fetch(`http://localhost:5678/api/works/${id}`, {
+        method: "DELETE",
+        headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + sessionStorage.getItem("token")
+        },
+        body: null  
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw Error(`${response.status}`);
+        }
+        // return response.json(); ??
+        console.log(response.status);
+    })
+    .then(() => {
+
+        document.getElementById(`modal-${id}`).remove();
+  
+        document.getElementById(`work-${id}`).remove();
+    })
+    .catch(error => alert("Erreur : " + error));
 }
+
+
+/************************************** */
+const deleteModal = document.querySelector(".modal-deleted");
+const addModal = document.querySelector(".modal-add");
+
+
+function openAddModal (){
+    
+    const btnAddPhoto = document.querySelector(".add-photo");
+    btnAddPhoto.addEventListener("click", () => {
+        deleteModal.style.display = "none";
+        addModal.style.display = "flex";
+        console.log("coucou");
+
+        const closeBtn = document.querySelector(".close-add");
+        closeBtn.addEventListener("click", closeModal);
+        addModal.addEventListener("click", stopPropagation);
+
+        const returnModal = document.querySelector(".return");
+
+        returnModal.addEventListener("click", returnFirstModal)
+    })
+}
+openAddModal()
+
+
+
+function returnFirstModal() {
+    addModal.style.display = "none";
+    deleteModal.style.display = "block";
+}
+

@@ -39,50 +39,7 @@
 	<section id="portfolio">
 		<h2>Mes Projets</h2>
 		<div class="gallery">
-			<figure>
-				<img src="assets/images/abajour-tahina.png" alt="Abajour Tahina">
-				<figcaption>Abajour Tahina</figcaption>
-			</figure>
-			<figure>
-				<img src="assets/images/appartement-paris-v.png" alt="Appartement Paris V">
-				<figcaption>Appartement Paris V</figcaption>
-			</figure>
-			<figure>
-				<img src="assets/images/restaurant-sushisen-londres.png" alt="Restaurant Sushisen - Londres">
-				<figcaption>Restaurant Sushisen - Londres</figcaption>
-			</figure>
-			<figure>
-				<img src="assets/images/la-balisiere.png" alt="Villa “La Balisiere” - Port Louis">
-				<figcaption>Villa “La Balisiere” - Port Louis</figcaption>
-			</figure>
-			<figure>
-				<img src="assets/images/structures-thermopolis.png" alt="Structures Thermopolis">
-				<figcaption>Structures Thermopolis</figcaption>
-			</figure>
-			<figure>
-				<img src="assets/images/appartement-paris-x.png" alt="Appartement Paris X">
-				<figcaption>Appartement Paris X</figcaption>
-			</figure>
-			<figure>
-				<img src="assets/images/le-coteau-cassis.png" alt="Pavillon “Le coteau” - Cassis">
-				<figcaption>Pavillon “Le coteau” - Cassis</figcaption>
-			</figure>
-			<figure>
-				<img src="assets/images/villa-ferneze.png" alt="Villa Ferneze - Isola d’Elba">
-				<figcaption>Villa Ferneze - Isola d’Elba</figcaption>
-			</figure>
-			<figure>
-				<img src="assets/images/appartement-paris-xviii.png" alt="Appartement Paris XVIII">
-				<figcaption>Appartement Paris XVIII</figcaption>
-			</figure>
-			<figure>
-				<img src="assets/images/bar-lullaby-paris.png" alt="Bar “Lullaby” - Paris">
-				<figcaption>Bar “Lullaby” - Paris</figcaption>
-			</figure>
-			<figure>
-				<img src="assets/images/hotel-first-arte-new-delhi.png" alt="Hotel First Arte - New Delhi">
-				<figcaption>Hotel First Arte - New Delhi</figcaption>
-			</figure>
+			
 		</div>
 	</section>
 	<section id="contact">
@@ -98,13 +55,43 @@
 			<input type="submit" value="Envoyer">
 		</form>
 	</section>
+	
 	<aside class="modal" aria-hidden="true" roles="dialog" aria-labelledby="title-modal">
-		<div class="modal-content modal-stop">
-			<i id="close" class="fa-solid fa-xmark"></i>
-			<h1 class="title-modal">Galerie photo</h1>
+		<div class="modal-content modal-stop modal-deleted">
+			<div class="close">
+				<i class="close-deleted fa-solid fa-xmark"></i>
+			</div>
+			<h2 class="title-modal">Galerie photo</h2>
 			<div class="gallery-list">
 			</div>
-			<input id="add-photo" type="submit" value="Ajouter une photo">
+			<button class="add-photo">Ajouter une photo</button>
+		</div>
+
+		<div class="modal-content modal-stop modal-add">
+			<div class="return-and-close">
+				<i class="return fa-solid fa-arrow-left"></i>
+				<i class="close-add fa-solid fa-xmark"></i>
+			</div>
+			<h2 class="title-modal">Ajout photo</h2>
+			<form class="form-photo" action="#" method="post">
+				<div class="add-new-photo">
+					<i class="picture fa-regular fa-image"></i>
+					<label class="btn-add-new-photo" for="file">+ Ajouter photo</label>
+					<input 
+						id="file" 
+						type="file" 
+						name="file" 
+						accept="images/png, images/jpeg">
+					<p class="type-file">jpg, png : 4mo max</p>
+				</div>
+				<div class="title-categorie">
+					<label for="title-photo">Titre</label>
+					<input type="text" id="title-photo" name="title-photo" required>
+					<label for="categorie-photo">Catégorie</label>
+					<input type="select" id="categorie-photo" name="categorie-photo" required>
+				</div>
+				<input type="submit" id="btn-valid" value="Valider">
+			</form>
 		</div>
 	</aside>
 </main>
