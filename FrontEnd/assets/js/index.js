@@ -27,6 +27,31 @@ let modal = null;
 /**Access to the element galley in the modal*/
 const modalContentGallery = document.querySelector(".gallery-list");
 
+/**Access to different modals */
+const deleteModal = document.querySelector(".modal-deleted");
+const addModal = document.querySelector(".modal-add");
+
+/**Access to deletion message */
+const message = document.querySelector(".message-deleted");
+
+/**Access to the photo title input */
+const titleModalAdd = document.getElementById("title-photo");
+
+/**Acces to the photo categorie input */
+const categorieModalAdd = document.getElementById("categorie-photo");
+
+/**Access to the validated button of the second modal */
+const btnValid = document.getElementById("btn-valid");
+
+/**Access to photo  add content */
+const contentAddPhoto = document.querySelector(".content-add-photo");
+
+/**Access to the photo preview */
+const preview = document.querySelector(".preview");
+
+/**Access to the add photo button */
+const addFile = document.getElementById("file");
+
 /* ******** */
 /* API LIST */
 /* ******** */
@@ -40,8 +65,8 @@ fetch("http://localhost:5678/api/works")
     return response.json()
 })
 .then(galleryData => {
-    works = galleryData
-    createGallery()
+    works = galleryData;
+    createGallery();
 })
 .catch(error => alert("Erreur : " + error))
 
@@ -54,9 +79,11 @@ fetch("http://localhost:5678/api/categories")
     return response.json()
 })
 .then(categoriesData => {
-    categories = categoriesData
+    categories = categoriesData;
     createFilter();
     adminMode();
+    openAddModal();
+
 })
 .catch(error => alert("Erreur : " + error))
 
@@ -101,7 +128,8 @@ function createGallery(categoryId = null){
 };
 
 
-/**FILTER */
+        /**FILTER */
+
 /**Adding filters of categories to filter works in the gallery */    
 function createFilter(){
     /**Adding a default category "Tous" (All)*/
@@ -150,7 +178,8 @@ function createFilter(){
     });  
 };  
 
-/**ADMIN MODE */
+        /**ADMIN MODE */
+
 /**Function to enable administrator mode */
 function adminMode(){
     /**Check if a token is present in the sessionStorage */
@@ -204,7 +233,8 @@ function adminMode(){
 };
 
 
-/**MODAL */
+        /**MODAL ONE*/
+
 /**Function for opening the modal */
 function openModal (e) {
     /**Prevent default click behavior */
@@ -215,8 +245,8 @@ function openModal (e) {
 
     /**Show modal with flex */
     modal.style.display = "flex";
-    addModal.style.display = "none";
     deleteModal.style.display = "block";
+    addModal.style.display = "none";
 
     /**Change accessibility attribute */
     modal.removeAttribute("aria-hidden");
@@ -226,6 +256,7 @@ function openModal (e) {
     modal.addEventListener("click", closeModal);
     modal.querySelector(".close-deleted").addEventListener("click", closeModal);
     modal.querySelector(".modal-stop").addEventListener("click", stopPropagation);
+
     /**Call function to display content */
     displayWorksModal();
  };
@@ -238,7 +269,7 @@ function closeModal (e) {
 
     /**Hide modal */
     modal.style.display = "none";
-    
+  
     /**Change accessibility attribute */
     modal.setAttribute("aria-hidden", "true");
     modal.removeAttribute("aria-modal"); 
@@ -247,9 +278,12 @@ function closeModal (e) {
     modal.removeEventListener("click", closeModal);
     modal.querySelector(".close-deleted").removeEventListener("click", closeModal);
     modal.querySelector(".modal-stop").removeEventListener("click", stopPropagation);
-  
+    
     /**Reset modal variable to null */
     modal = null;
+
+    /**Calling the function that resets the photo addition modal */
+    resetAddModal()
 };
 
 /**Prevent the element from closing when clicking on it */
@@ -265,10 +299,12 @@ window.addEventListener("keydown", (e) => {
 });
 
 
+        /**UPDATE WORKS IN THE FIRST MODAL */
+
 /**Function to display the content of the modal */
 function displayWorksModal () {
     /**Reset existing content */
-    modalContentGallery.innerHTML = null;
+    modalContentGallery.innerHTML = "";
 
     /**Loop through each work to display them in the modal */
     works.forEach(work => {
@@ -295,9 +331,6 @@ function displayWorksModal () {
     })
 };
 
-
-
-
 /**Function to delete a work */
 function deleteWorksModal(id) {
     fetch(`http://localhost:5678/api/works/${id}`, {
@@ -314,46 +347,208 @@ function deleteWorksModal(id) {
             throw Error(`${response.status}`);
         }
         // return response.json(); ??
-        console.log(response.status);
     })
     .then(() => {
-
+        /**Remove image from modal */
         document.getElementById(`modal-${id}`).remove();
-  
+        
+        /**Displays message for 1.5 second */
+        message.style.display="flex";
+        setTimeout(()=>{
+            message.style.display="none";
+        }, 1500)
+
+        /**Delete image from gallery */
         document.getElementById(`work-${id}`).remove();
     })
     .catch(error => alert("Erreur : " + error));
-}
+};
 
 
-/************************************** */
-const deleteModal = document.querySelector(".modal-deleted");
-const addModal = document.querySelector(".modal-add");
+        /**MODAL ADD WORK */
 
-
+/**Function open modal for add photo */
 function openAddModal (){
     
+    /**Access to the first modal button */
     const btnAddPhoto = document.querySelector(".add-photo");
+
+    /**Added an event listener to hide the first modal and display the second */
     btnAddPhoto.addEventListener("click", () => {
         deleteModal.style.display = "none";
         addModal.style.display = "flex";
-        console.log("coucou");
 
+        /**Calling the closeModal and stopPropagation function to close the modal, except when clicking on it itself */
         const closeBtn = document.querySelector(".close-add");
         closeBtn.addEventListener("click", closeModal);
         addModal.addEventListener("click", stopPropagation);
 
+        /**Access to the return arrow and call of the function on click to return to the first modal */
         const returnModal = document.querySelector(".return");
-
         returnModal.addEventListener("click", returnFirstModal)
-    })
+    });
+    addSelectedCategories()
+};
+
+
+function addSelectedCategories () {
+/**Removing the “Tous” item from the table */
+    categories.shift();
+
+    /**"forEach" loop add all categories in the selection input */
+    categories.forEach(category => {
+            const categoryWork = document.createElement("option");
+            categoryWork.setAttribute("id", `categorie-${category.id}`);
+            categoryWork.setAttribute("name", category.name);
+            categoryWork.innerText = category.name;
+            categorieModalAdd.appendChild(categoryWork);
+    });
 }
-openAddModal()
 
-
-
+/**Function return to the first modal */
 function returnFirstModal() {
+   /**Hiding the modal adding and reappearing the first modal */ 
     addModal.style.display = "none";
     deleteModal.style.display = "block";
+
+    /**Calling the function that resets the photo add modal */
+    resetAddModal();
+};
+
+
+        /**ADD WORK */
+
+/**Function to get an image */
+function getPhoto () {
+    
+    const selectedPhoto = this.files[0];
+    
+    /**Required size, 4mo */
+    const sizeFileMax = 4 * 1024 * 1024;
+
+    /**Required type */
+    const typeFile = ["image/jpeg", "image/png"];
+    
+    /**Checking the photo size */
+    if(selectedPhoto.size > sizeFileMax){
+        alert("Votre fichier dépasse 4 mo.")
+
+        /**Checking the photo type */    
+    } else if(!typeFile.includes(selectedPhoto.type)){
+        alert("Votre fichier n'est pas au bon format.")
+    } else {   
+        /**Hide photo content */ 
+        contentAddPhoto.style.display = "none";
+
+        /**Creating a new image */
+        let newPhoto = document.createElement("img");
+
+        /**Adding the source of the photo using the URL created for it */
+        newPhoto.src = URL.createObjectURL(selectedPhoto);
+        /**Add a class and changing the size to fit in the parent container */
+        newPhoto.classList.add("new-photo");
+        
+        newPhoto.style.height = "169px";
+
+        /**Adding the new image to the <div> preview */
+        preview.appendChild(newPhoto);
+
+        newPhoto.addEventListener("click", () => {
+
+            addFile.click();
+            
+            resetAddModal();
+        });
+    }
+};
+
+/***************************************************** */
+
+/**Button valid disabled initially */
+function setBtnState(disabled) {
+    btnValid.disabled = disabled;
+    btnValid.style.cursor = disabled ? "not-allowed" : "pointer";
+    btnValid.style.backgroundColor = disabled ? "grey" : "#1D6154";
+};
+setBtnState(true);
+
+/**Toggle button state based on input */
+function toggleSubmitBtn() {
+    const photoAdded = document.querySelector(".new-photo");
+
+    /**Checks if the title, category and photo meet the conditions to activate the button */
+    setBtnState(!(titleModalAdd.value && categorieModalAdd.value && photoAdded !== null));
+};
+
+
+/**************************** */
+/**Add modal reset function */
+function resetAddModal () {
+    preview.innerHTML = "";
+    titleModalAdd.value = "";
+    categorieModalAdd.value = "";
+
+    contentAddPhoto.style.display = "flex";
+    
+    /**reset button valid */
+    toggleSubmitBtn();
+};
+
+// /***************************************************************** */
+// /**fonction post nvx projet */
+
+function postNewPhoto (e) {
+    e.preventDefault()
+    const photoModalAdd = document.querySelector(".new-photo");
+    const formData = new FormData();
+
+    formData.append("title", titleModalAdd.value);
+    formData.append("category", categorieModalAdd.value);
+    formData.append("imageURL", photoModalAdd.src);
+
+    fetch("http://localhost:5678/api/works", {
+        method: "POST", 
+        headers: {
+            "Accept": "application/json",
+            "Authorization": "Bearer " + sessionStorage.getItem("token")
+        },
+        body: formData
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw Error(`${response.status}`)
+        }
+        // return response.json()
+        console.log("ok");
+    })
+    .then((data) => {
+        
+        console.log(data);
+    })
+    .catch(error => alert("Erreur : " + error));
+    
 }
+
+
+/***************************************************************** */
+/**event pr envoi formulaire */
+btnValid.addEventListener("submit", postNewPhoto)
+
+
+/**event pour récup photo */
+addFile.addEventListener("change", getPhoto);
+
+/********************* */
+
+/**event pour désactiver btn */
+titleModalAdd.addEventListener("input", toggleSubmitBtn);
+categorieModalAdd.addEventListener("input", toggleSubmitBtn);
+addFile.addEventListener("change", toggleSubmitBtn);
+
+
+
+// categorieModalAdd.addEventListener("change", (e) => {
+//     console.log(e.target.selectedIndex);
+// })
+
 

@@ -423,6 +423,15 @@ footer nav ul {
 	cursor: pointer;
 }
 
+.message-deleted {
+	color: red;
+	display: none;
+	justify-content: center;
+	margin-top: 10px;
+	font-size: 16px;
+	font-weight: 700;
+}
+
 .modal-add {
 	display: none;
 	flex-direction: column;
@@ -432,7 +441,6 @@ footer nav ul {
 .return-and-close {
 	display: flex;
 	justify-content: space-between;
-	/* margin-top: 26px; */
 }
 
 .return {
@@ -450,7 +458,6 @@ footer nav ul {
 
 .add-new-photo {
 	display: flex;
-	flex-direction: column;
 	align-items: center;
 	justify-content: center;
 	background-color: #e8f1f6;
@@ -460,6 +467,11 @@ footer nav ul {
 	margin-bottom: 9px;
 }
 
+.content-add-photo {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
 .picture{
 	font-size: 76px;
 	color: #b9c5cc;
@@ -471,6 +483,12 @@ footer nav ul {
 	padding: 10px 33px;
 	margin-top: 6px;
 	border-radius: 50px;
+	cursor: pointer;
+	transition: transform;
+}
+
+.btn-add-new-photo:hover {
+	transform: scale(1.1);
 }
 
 #file {
@@ -497,15 +515,15 @@ footer nav ul {
 	border: none;
 	box-shadow: 0px 4px 14px 0px rgba(0, 0, 0, 0.09);
 	margin-top: 10px;
+	font-size: 1.2rem;
+	color: #444444;
 }
 
 #title-photo {
 	margin-bottom: 21px;
 }
 
-#categorie-photo {
-	margin-top: 10;
-}
+
 
 #btn-valid {
 	width: 237px;
@@ -514,3 +532,4 @@ footer nav ul {
 	margin-top: 32px;
 	margin-bottom: 45px;
 }
+

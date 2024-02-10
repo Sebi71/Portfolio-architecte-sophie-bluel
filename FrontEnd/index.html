@@ -64,6 +64,7 @@
 			<h2 class="title-modal">Galerie photo</h2>
 			<div class="gallery-list">
 			</div>
+			<p class="message-deleted">photo supprimée</p>
 			<button class="add-photo">Ajouter une photo</button>
 		</div>
 
@@ -75,20 +76,25 @@
 			<h2 class="title-modal">Ajout photo</h2>
 			<form class="form-photo" action="#" method="post">
 				<div class="add-new-photo">
-					<i class="picture fa-regular fa-image"></i>
-					<label class="btn-add-new-photo" for="file">+ Ajouter photo</label>
-					<input 
-						id="file" 
-						type="file" 
-						name="file" 
-						accept="images/png, images/jpeg">
-					<p class="type-file">jpg, png : 4mo max</p>
+					<div class="content-add-photo">
+						<i class="picture fa-regular fa-image"></i>
+						<label class="btn-add-new-photo" for="file">+ Ajouter photo</label>
+						<input 
+							id="file" 
+							type="file" 
+							name="file" 
+							accept="image/png, image/jpeg">
+						<p class="type-file">jpg, png : 4mo max</p>
+					</div>
+					<div class="preview"></div>
 				</div>
 				<div class="title-categorie">
 					<label for="title-photo">Titre</label>
 					<input type="text" id="title-photo" name="title-photo" required>
 					<label for="categorie-photo">Catégorie</label>
-					<input type="select" id="categorie-photo" name="categorie-photo" required>
+					<select id="categorie-photo" name="categorie-photo" required>
+						<option value="">--Choisissez une catégorie--</option>
+					</select>
 				</div>
 				<input type="submit" id="btn-valid" value="Valider">
 			</form>
