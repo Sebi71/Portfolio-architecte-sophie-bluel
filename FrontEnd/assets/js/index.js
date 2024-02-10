@@ -498,13 +498,21 @@ function resetAddModal () {
 // /**fonction post nvx projet */
 
 function postNewPhoto (e) {
-    e.preventDefault()
-    const photoModalAdd = document.querySelector(".new-photo");
-    const formData = new FormData();
+    e.preventDefault();
+    const photoModalAdd = document.getElementById("file");
+    console.log("photoModalAdd:", photoModalAdd.files[0]);
 
-    formData.append("title", titleModalAdd.value);
-    formData.append("category", categorieModalAdd.value);
-    formData.append("imageURL", photoModalAdd.src);
+        const formData = new FormData();
+
+        formData.append("title", titleModalAdd.value);
+        formData.append("category", categorieModalAdd.value);
+        formData.append("imageFile", photoModalAdd.files[0])
+
+    console.log("Données envoyées:", {
+        title: titleModalAdd.value,
+        category: categorieModalAdd.value,
+        imageURL: photoModalAdd.files[0]
+    })
 
     fetch("http://localhost:5678/api/works", {
         method: "POST", 
@@ -526,14 +534,16 @@ function postNewPhoto (e) {
         console.log(data);
     })
     .catch(error => alert("Erreur : " + error));
-    
 }
-
 
 /***************************************************************** */
 /**event pr envoi formulaire */
-btnValid.addEventListener("submit", postNewPhoto)
-
+const formPhoto = document.querySelector(".form-photo")
+formPhoto.addEventListener("submit", function (e) {
+    e.preventDefault();
+    console.log("formulaire soumis");
+    postNewPhoto(e)
+})
 
 /**event pour récup photo */
 addFile.addEventListener("change", getPhoto);
