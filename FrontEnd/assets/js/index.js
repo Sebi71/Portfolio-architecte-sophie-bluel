@@ -2,7 +2,7 @@
 /* DECLARATION OF GLOBAL VARIABLES */
 /* ******************************* */
 
-/**Acces API */
+/**Acces of global API */
 let works = [];
 let categories = [];
 
@@ -16,41 +16,45 @@ const portfolio = document.getElementById("portfolio");
 const header = document.querySelector("header");
 
 /**Acces to "login" element */
-const logout = document.querySelector('li a[href="login.html"]');
+const switchLogout = document.querySelector('li a[href="login.html"]');
 
 /**Acces to portfolio <h2> element */
-const myProjets = document.querySelector("#portfolio h2");
+const titlemyProjets = document.querySelector("#portfolio h2");
 
 /**Default variable for modal access */
 let modal = null;
 
 /**Access to the element galley in the modal*/
-const modalContentGallery = document.querySelector(".gallery-list");
+const firstModalContentGallery = document.querySelector(".gallery-list");
 
 /**Access to different modals */
-const deleteModal = document.querySelector(".modal-deleted");
+const firstModal = document.querySelector(".modal-deleted");
 const addModal = document.querySelector(".modal-add");
 
 /**Access to deletion message */
-const message = document.querySelector(".message-deleted");
+const messagePhotoDeleted = document.querySelector(".message-deleted");
 
 /**Access to the photo title input */
-const titleModalAdd = document.getElementById("title-photo");
+const titleAddModal = document.getElementById("title-photo");
 
 /**Acces to the photo categorie input */
-const categorieModalAdd = document.getElementById("categorie-photo");
+const categorieAddModal = document.getElementById("categorie-photo");
 
 /**Access to the validated button of the second modal */
-const btnValid = document.getElementById("btn-valid");
+const btnValidAddModal = document.getElementById("btn-valid");
 
 /**Access to photo  add content */
 const contentAddPhoto = document.querySelector(".content-add-photo");
 
 /**Access to the photo preview */
-const preview = document.querySelector(".preview");
+const previewNewPhoto = document.querySelector(".preview");
 
 /**Access to the add photo button */
-const addFile = document.getElementById("file");
+const btnAddFile = document.getElementById("file");
+
+/**Acces to the form in add modal */
+const formPhoto = document.querySelector(".form-photo");
+
 
 /* ******** */
 /* API LIST */
@@ -66,7 +70,7 @@ fetch("http://localhost:5678/api/works")
 })
 .then(galleryData => {
     works = galleryData;
-    createGallery();
+    createWorks();
 })
 .catch(error => alert("Erreur : " + error))
 
@@ -101,7 +105,7 @@ function deleteWorks (){
 
 
 /**Function CREATE new works API*/
-function createGallery(categoryId = null){
+function createWorks(categoryId = null){
     /**Delete gallery(works) */
     deleteWorks()
 
@@ -111,19 +115,19 @@ function createGallery(categoryId = null){
     /**Loop through each work */
     displayWorks.forEach(work => {
             /**Create a <figure> element for each work */
-            const figure = document.createElement("figure");
-            figure.setAttribute("id", `work-${work.id}`);
+            const figureGallery = document.createElement("figure");
+            figureGallery.setAttribute("id", `work-${work.id}`);
             /**Create an <img> element to display the work's image */
-            const imageElement = document.createElement("img");
-            imageElement.src = work.imageUrl;
-            imageElement.setAttribute("alt", work.title);
+            const imageElementGallery = document.createElement("img");
+            imageElementGallery.src = work.imageUrl;
+            imageElementGallery.setAttribute("alt", work.title);
             /**Create a <figcaption> element to display the title of the work */
-            const titleImage = document.createElement("figcaption");
-            titleImage.innerText = work.title;
+            const titleImageGallery = document.createElement("figcaption");
+            titleImageGallery.innerText = work.title;
             /**Add the elements to the gallery */
-            galleryElement.appendChild(figure);
-            figure.appendChild(imageElement);
-            figure.appendChild(titleImage);
+            galleryElement.appendChild(figureGallery);
+            figureGallery.appendChild(imageElementGallery);
+            figureGallery.appendChild(titleImageGallery);
     });
 };
 
@@ -136,31 +140,31 @@ function createFilter(){
     categories.unshift({id: 0, name: "Tous"});
     
     /**Creating <div> element for categories */
-    const categoriesElement = document.createElement("div");
-    categoriesElement.classList.add("categories");
-    portfolio.insertBefore(categoriesElement, galleryElement);
+    const categoriesElementFilter = document.createElement("div");
+    categoriesElementFilter.classList.add("categories");
+    portfolio.insertBefore(categoriesElementFilter, galleryElement);
     
     /**Loop through each category */
     categories.forEach((categoryElement, i) => {
         /**Create buttons for different categories */
-        const categoryBtn = document.createElement("button");
-        categoryBtn.innerText = categoryElement.name;
-        categoryBtn.value = categoryElement.id;
-        categoryBtn.classList.add("category-btn");
+        const categoryBtnFilter = document.createElement("button");
+        categoryBtnFilter.innerText = categoryElement.name;
+        categoryBtnFilter.value = categoryElement.id;
+        categoryBtnFilter.classList.add("category-btn");
         /**Add a class to the first button */
         if(i === 0){
-            categoryBtn.classList.add("category-selected")
+            categoryBtnFilter.classList.add("category-selected")
         };
         /**Add buttons to the categories <div> */
-        categoriesElement.appendChild(categoryBtn);
+        categoriesElementFilter.appendChild(categoryBtnFilter);
         
         /**Change catégory witch function addEventListener click */
-        categoryBtn.addEventListener("click", (e) => {
+        categoryBtnFilter.addEventListener("click", (e) => {
             /**Get the selected category ID */
             const selectedCategoryId = parseInt(e.target.value);
             
             /**Update the gallery */
-            createGallery(selectedCategoryId);
+            createWorks(selectedCategoryId);
             
             /**change color of the button */
             const filterColorCategory = document.querySelectorAll(".category-btn");
@@ -185,41 +189,41 @@ function adminMode(){
     /**Check if a token is present in the sessionStorage */
     if(sessionStorage.getItem("token")){
         /**Create <div> edit mode content and insert at the beginning of the header */
-        const editMode = `<div class="edit-mode">
+        const editModeBar = `<div class="edit-mode">
         <i class="logo-edit fa-regular fa-pen-to-square"></i>
         <p>Mode édition</p>
         </div>`;
         header.style.marginTop = "88px";
-        header.insertAdjacentHTML("afterbegin", editMode);
+        header.insertAdjacentHTML("afterbegin", editModeBar);
         
-        /**change login text to logout text */
-        logout.textContent = "logout";
-        logout.href = "#";
+        /**change login text to switchLogout text */
+        switchLogout.textContent = "logout";
+        switchLogout.href = "#";
         
-        logout.addEventListener("click", () => {
+        switchLogout.addEventListener("click", () => {
             /**Delete the session token and reload the page */
             sessionStorage.removeItem("token");
             location.reload();
         });
         /**Create a <div> container for toModified and title "Mes Projets"  */
-        const containerDiv = document.createElement("div");
-        containerDiv.classList.add("edit-projets");
+        const containerDivBtn = document.createElement("div");
+        containerDivBtn.classList.add("edit-projets");
         /**Create the <di> link to edit projects */
-        const toModified = `<div class="edit">
+        const btnToModified = `<div class="edit">
         <i class="fa-regular fa-pen-to-square"></i>
         <p>modifier</p>
         </div>`;
 
         /**Insert container before first portfolio item and move projects inside */
-        portfolio.insertBefore(containerDiv, portfolio.firstChild);
-        containerDiv.appendChild(myProjets);
+        portfolio.insertBefore(containerDivBtn, portfolio.firstChild);
+        containerDivBtn.appendChild(titlemyProjets);
         /**Insert edit link after projects */
-        myProjets.insertAdjacentHTML("afterend", toModified);
+        titlemyProjets.insertAdjacentHTML("afterend", btnToModified);
 
         
         /**Hide category buttons */
-        const categoriesButtons = document.querySelectorAll('.category-btn');
-        categoriesButtons.forEach(button => {
+        const categoriesButtonsFilter = document.querySelectorAll('.category-btn');
+        categoriesButtonsFilter.forEach(button => {
             button.style.display = 'none';
         });
 
@@ -227,17 +231,17 @@ function adminMode(){
         const editBtn = document.querySelector(".edit");
         if (editBtn) {
             /**If the element is found, add an event listener for the click */
-            editBtn.addEventListener("click", openModal);
+            editBtn.addEventListener("click", openFirstModal);
         };
     };
 };
 
 
-        /**MODAL ONE*/
+        /**FIRST MODAL*/
 
 /**Function for opening the modal */
-function openModal (e) {
-    /**Prevent default click behavior */
+function openFirstModal (e) {
+    /**Prevent default click */
     e.preventDefault();
 
     /**Modal access */
@@ -245,7 +249,7 @@ function openModal (e) {
 
     /**Show modal with flex */
     modal.style.display = "flex";
-    deleteModal.style.display = "block";
+    firstModal.style.display = "block";
     addModal.style.display = "none";
 
     /**Change accessibility attribute */
@@ -258,15 +262,12 @@ function openModal (e) {
     modal.querySelector(".modal-stop").addEventListener("click", stopPropagation);
 
     /**Call function to display content */
-    displayWorksModal();
+    displayWorksFirstModal();
  };
 
 
 /**Function for close the modal */
-function closeModal (e) {
-    /**Prevent default click behavior */
-    e.preventDefault();
-
+function closeModal () {
     /**Hide modal */
     modal.style.display = "none";
   
@@ -283,7 +284,7 @@ function closeModal (e) {
     modal = null;
 
     /**Calling the function that resets the photo addition modal */
-    resetAddModal()
+    resetAddModal();
 };
 
 /**Prevent the element from closing when clicking on it */
@@ -294,7 +295,7 @@ function stopPropagation (e) {
 /**Close the modal with escape */
 window.addEventListener("keydown", (e) => {
     if (e.key === "Escape" || e.key === "Esc") {
-        closeModal(e)
+        closeModal(e);
     };
 });
 
@@ -302,37 +303,37 @@ window.addEventListener("keydown", (e) => {
         /**UPDATE WORKS IN THE FIRST MODAL */
 
 /**Function to display the content of the modal */
-function displayWorksModal () {
+function displayWorksFirstModal () {
     /**Reset existing content */
-    modalContentGallery.innerHTML = "";
+    firstModalContentGallery.innerHTML = "";
 
     /**Loop through each work to display them in the modal */
     works.forEach(work => {
         /**Creating elements */
-        const figure = document.createElement("figure");
-        figure.setAttribute("class", "cute-gallery");
-        figure.setAttribute("id", `modal-${work.id}`)
-        const imageModal = document.createElement("img");
-        imageModal.src = work.imageUrl;
-        imageModal.setAttribute("class", "modal-img");
+        const figureFirstModal = document.createElement("figure");
+        figureFirstModal.setAttribute("class", "cute-gallery");
+        figureFirstModal.setAttribute("id", `modal-${work.id}`)
+        const imageFirstModal = document.createElement("img");
+        imageFirstModal.src = work.imageUrl;
+        imageFirstModal.setAttribute("class", "modal-img");
         
         /**Adding elements */
-        modalContentGallery.appendChild(figure);
-        figure.appendChild(imageModal);
+        firstModalContentGallery.appendChild(figureFirstModal);
+        figureFirstModal.appendChild(imageFirstModal);
         
         /**Add a trash icon with the work ID */
-        const trash = `<i class="fa-solid fa-trash-can delete-work" id = "trash-${work.id}"></i>`
-        figure.insertAdjacentHTML("afterbegin", trash);
+        const trashIcon = `<i class="fa-solid fa-trash-can delete-work" id = "trash-${work.id}"></i>`
+        figureFirstModal.insertAdjacentHTML("afterbegin", trashIcon);
         
         /**Add an event listener for deleting the work on click of the trash icon */
-        const trashSelected = document.getElementById(`trash-${work.id}`);
-        trashSelected.addEventListener("click", () => deleteWorksModal(work.id));
+        const trashPhotoSelected = document.getElementById(`trash-${work.id}`);
+        trashPhotoSelected.addEventListener("click", () => deleteWorksFirstModal(work.id));
         
     })
 };
 
 /**Function to delete a work */
-function deleteWorksModal(id) {
+function deleteWorksFirstModal(id) {
     fetch(`http://localhost:5678/api/works/${id}`, {
         method: "DELETE",
         headers: {
@@ -346,16 +347,15 @@ function deleteWorksModal(id) {
         if (!response.ok) {
             throw Error(`${response.status}`);
         }
-        // return response.json(); ??
     })
     .then(() => {
         /**Remove image from modal */
         document.getElementById(`modal-${id}`).remove();
         
         /**Displays message for 1.5 second */
-        message.style.display="flex";
+        messagePhotoDeleted.style.display="flex";
         setTimeout(()=>{
-            message.style.display="none";
+            messagePhotoDeleted.style.display="none";
         }, 1500)
 
         /**Delete image from gallery */
@@ -375,22 +375,33 @@ function openAddModal (){
 
     /**Added an event listener to hide the first modal and display the second */
     btnAddPhoto.addEventListener("click", () => {
-        deleteModal.style.display = "none";
+        firstModal.style.display = "none";
         addModal.style.display = "flex";
 
         /**Calling the closeModal and stopPropagation function to close the modal, except when clicking on it itself */
-        const closeBtn = document.querySelector(".close-add");
-        closeBtn.addEventListener("click", closeModal);
+        const closeCrossBtn = document.querySelector(".close-add");
+        closeCrossBtn.addEventListener("click", closeModal);
         addModal.addEventListener("click", stopPropagation);
 
         /**Access to the return arrow and call of the function on click to return to the first modal */
-        const returnModal = document.querySelector(".return");
-        returnModal.addEventListener("click", returnFirstModal)
+        const returnModalIcon = document.querySelector(".return");
+        returnModalIcon.addEventListener("click", returnFirstModal)
     });
-    addSelectedCategories()
+    /**Calling the function that adds the categories to select */
+    addSelectedCategories();
 };
 
+/**Function return to the first modal */
+function returnFirstModal() {
+   /**Hiding the modal adding and reappearing the first modal */ 
+    addModal.style.display = "none";
+    firstModal.style.display = "block";
 
+    /**Calling the function that resets the photo add modal */
+    resetAddModal();
+};
+
+/**Function to add different categories */
 function addSelectedCategories () {
 /**Removing the “Tous” item from the table */
     categories.shift();
@@ -398,30 +409,22 @@ function addSelectedCategories () {
     /**"forEach" loop add all categories in the selection input */
     categories.forEach(category => {
             const categoryWork = document.createElement("option");
-            categoryWork.setAttribute("id", `categorie-${category.id}`);
+            categoryWork.setAttribute("value", category.id);
             categoryWork.setAttribute("name", category.name);
             categoryWork.innerText = category.name;
-            categorieModalAdd.appendChild(categoryWork);
+            categorieAddModal.appendChild(categoryWork);
     });
-}
-
-/**Function return to the first modal */
-function returnFirstModal() {
-   /**Hiding the modal adding and reappearing the first modal */ 
-    addModal.style.display = "none";
-    deleteModal.style.display = "block";
-
-    /**Calling the function that resets the photo add modal */
-    resetAddModal();
 };
 
 
-        /**ADD WORK */
 
-/**Function to get an image */
-function getPhoto () {
+        /**ADD NEW WORK (PHOTO)*/
+
+/**Function to get a photo */
+function getNewPhoto () {
     
-    const selectedPhoto = this.files[0];
+    /**Constant to retrieve the first selected file, "this" refers to the btn "input type: file" */
+    const selectedNewPhoto = this.files[0];
     
     /**Required size, 4mo */
     const sizeFileMax = 4 * 1024 * 1024;
@@ -430,11 +433,11 @@ function getPhoto () {
     const typeFile = ["image/jpeg", "image/png"];
     
     /**Checking the photo size */
-    if(selectedPhoto.size > sizeFileMax){
+    if(selectedNewPhoto.size > sizeFileMax){
         alert("Votre fichier dépasse 4 mo.")
 
         /**Checking the photo type */    
-    } else if(!typeFile.includes(selectedPhoto.type)){
+    } else if(!typeFile.includes(selectedNewPhoto.type)){
         alert("Votre fichier n'est pas au bon format.")
     } else {   
         /**Hide photo content */ 
@@ -444,31 +447,30 @@ function getPhoto () {
         let newPhoto = document.createElement("img");
 
         /**Adding the source of the photo using the URL created for it */
-        newPhoto.src = URL.createObjectURL(selectedPhoto);
+        newPhoto.src = URL.createObjectURL(selectedNewPhoto);
         /**Add a class and changing the size to fit in the parent container */
         newPhoto.classList.add("new-photo");
         
         newPhoto.style.height = "169px";
 
-        /**Adding the new image to the <div> preview */
-        preview.appendChild(newPhoto);
+        /**Adding the new image to the <div> previewNewPhoto */
+        previewNewPhoto.appendChild(newPhoto);
 
         newPhoto.addEventListener("click", () => {
-
-            addFile.click();
+            /**Change photos by clicking on it */
+            btnAddFile.click();
             
+            /**Calling the function that resets the photo addition modal */
             resetAddModal();
         });
-    }
+    };
 };
 
-/***************************************************** */
-
-/**Button valid disabled initially */
+// /**Button valid disabled initially */
 function setBtnState(disabled) {
-    btnValid.disabled = disabled;
-    btnValid.style.cursor = disabled ? "not-allowed" : "pointer";
-    btnValid.style.backgroundColor = disabled ? "grey" : "#1D6154";
+    btnValidAddModal.disabled = disabled;
+    btnValidAddModal.style.cursor = disabled ? "not-allowed" : "pointer";
+    btnValidAddModal.style.backgroundColor = disabled ? "grey" : "#1D6154";
 };
 setBtnState(true);
 
@@ -476,17 +478,21 @@ setBtnState(true);
 function toggleSubmitBtn() {
     const photoAdded = document.querySelector(".new-photo");
 
-    /**Checks if the title, category and photo meet the conditions to activate the button */
-    setBtnState(!(titleModalAdd.value && categorieModalAdd.value && photoAdded !== null));
+    /**Checks if the title, category, and photo meet the conditions to activate the button */
+    if (!(titleAddModal.value && categorieAddModal.value && photoAdded !== null)) {
+        /**Leave the button disabled */
+        setBtnState(true);
+    } else {
+        /*Activates the button if all conditions are met */
+       setBtnState(false);
+    };
 };
 
-
-/**************************** */
 /**Add modal reset function */
 function resetAddModal () {
-    preview.innerHTML = "";
-    titleModalAdd.value = "";
-    categorieModalAdd.value = "";
+    previewNewPhoto.innerHTML = "";
+    titleAddModal.value = "";
+    categorieAddModal.value = "";
 
     contentAddPhoto.style.display = "flex";
     
@@ -494,30 +500,29 @@ function resetAddModal () {
     toggleSubmitBtn();
 };
 
-// /***************************************************************** */
-// /**fonction post nvx projet */
 
-function postNewPhoto (e) {
-    e.preventDefault();
-    const photoModalAdd = document.getElementById("file");
-    console.log("photoModalAdd:", photoModalAdd.files[0]);
+        /**POST API */
 
-        const formData = new FormData();
+/**Function to POST a photo to the API */
+function postNewPhoto () {
+    /**Creating a formData object to send form data to the add modal */
+    const formData = new FormData();
 
-        formData.append("title", titleModalAdd.value);
-        formData.append("category", categorieModalAdd.value);
-        formData.append("imageFile", photoModalAdd.files[0])
+    /**Adding values ​​to formData */
+    formData.append("title", titleAddModal.value);
+    formData.append("category", categorieAddModal.value);
+    formData.append("image", btnAddFile.files[0])
 
     console.log("Données envoyées:", {
-        title: titleModalAdd.value,
-        category: categorieModalAdd.value,
-        imageURL: photoModalAdd.files[0]
-    })
+        title: titleAddModal.value,
+        category : categorieAddModal.value,
+        image: btnAddFile.files[0]
+    });
 
+    /**Sending to the API */
     fetch("http://localhost:5678/api/works", {
         method: "POST", 
         headers: {
-            "Accept": "application/json",
             "Authorization": "Bearer " + sessionStorage.getItem("token")
         },
         body: formData
@@ -527,38 +532,33 @@ function postNewPhoto (e) {
             throw Error(`${response.status}`)
         }
         // return response.json()
-        console.log("ok");
+
     })
-    .then((data) => {
-        
-        console.log(data);
+    .then(() => {
+        // console.log("Données de la nouvelle photo :", galleryData);
+        createWorks();
+        closeModal();
     })
     .catch(error => alert("Erreur : " + error));
-}
+};
 
-/***************************************************************** */
-/**event pr envoi formulaire */
-const formPhoto = document.querySelector(".form-photo")
+
+/* ****************************** */
+/* DECLARATION OF EVENT LISTENERS */
+/* ****************************** */
+
+/**EventListener for sending the new form */
 formPhoto.addEventListener("submit", function (e) {
     e.preventDefault();
-    console.log("formulaire soumis");
-    postNewPhoto(e)
-})
+    postNewPhoto();
+});
 
-/**event pour récup photo */
-addFile.addEventListener("change", getPhoto);
+/**EventListener to recover the photo from the computer files */
+btnAddFile.addEventListener("change", getNewPhoto);
 
-/********************* */
+/**EventListener to disable the validation button of the add modal */
+titleAddModal.addEventListener("input", toggleSubmitBtn);
+categorieAddModal.addEventListener("input", toggleSubmitBtn);
+btnAddFile.addEventListener("change", toggleSubmitBtn);
 
-/**event pour désactiver btn */
-titleModalAdd.addEventListener("input", toggleSubmitBtn);
-categorieModalAdd.addEventListener("input", toggleSubmitBtn);
-addFile.addEventListener("change", toggleSubmitBtn);
-
-
-
-// categorieModalAdd.addEventListener("change", (e) => {
-//     console.log(e.target.selectedIndex);
-// })
-
-
+/***************************************************************************** */

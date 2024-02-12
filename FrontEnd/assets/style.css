@@ -204,7 +204,8 @@ font-size: 15px;
 
 .gallery img {
 	width: 100%;
-
+	height: 410px;
+	object-fit: cover;
 }
 #contact {
 	width: 50%;

@@ -3,7 +3,7 @@
 /* ******************************* */
 
 /**Selecting form elements */
-const form = document.querySelector(".identifier-form");
+const formLogin = document.querySelector(".identifier-form");
 const mail = document.getElementById("mail");
 const password = document.getElementById("password");
 
@@ -27,7 +27,13 @@ setBtnState(true);
 
 /**Toggle button state based on input */
 function toggleSubmitBtn() {
-    setBtnState(!(mail.value && password.value));
+    if (!(mail.value && password.value)) {
+        /**Leave the button disabled */
+        setBtnState(true);
+    } else {
+        /*Activates the button if all conditions are met */
+       setBtnState(false);
+    };
 };
 
 
@@ -41,7 +47,7 @@ password.addEventListener("input", toggleSubmitBtn);
 
 
 /**Event listener for form submission */
-form.addEventListener("submit", (e) => {
+formLogin.addEventListener("submit", (e) => {
     e.preventDefault();
     
     /**Creating an object with credentials */
@@ -86,6 +92,6 @@ form.addEventListener("submit", (e) => {
             alert("Erreur : " + error)
         }
     })
-})
+});
 
 
