@@ -329,7 +329,7 @@ function displayWorksFirstModal () {
         const trashPhotoSelected = document.getElementById(`trash-${work.id}`);
         trashPhotoSelected.addEventListener("click", () => deleteWorksFirstModal(work.id));
         
-    })
+    });
 };
 
 /**Function to delete a work */
@@ -349,17 +349,20 @@ function deleteWorksFirstModal(id) {
         }
     })
     .then(() => {
+        /** */
+        works = works.filter(work => work.id !== id);
+
         /**Remove image from modal */
-        document.getElementById(`modal-${id}`).remove();
+        displayWorksFirstModal();
         
         /**Displays message for 1.5 second */
         messagePhotoDeleted.style.display="flex";
         setTimeout(()=>{
             messagePhotoDeleted.style.display="none";
-        }, 1500)
+        }, 1500);
 
         /**Delete image from gallery */
-        document.getElementById(`work-${id}`).remove();
+        createWorks();
     })
     .catch(error => alert("Erreur : " + error));
 };
@@ -369,7 +372,6 @@ function deleteWorksFirstModal(id) {
 
 /**Function open modal for add photo */
 function openAddModal (){
-    
     /**Access to the first modal button */
     const btnAddPhoto = document.querySelector(".add-photo");
 
@@ -385,7 +387,7 @@ function openAddModal (){
 
         /**Access to the return arrow and call of the function on click to return to the first modal */
         const returnModalIcon = document.querySelector(".return");
-        returnModalIcon.addEventListener("click", returnFirstModal)
+        returnModalIcon.addEventListener("click", returnFirstModal);
     });
     /**Calling the function that adds the categories to select */
     addSelectedCategories();
@@ -490,9 +492,11 @@ function toggleSubmitBtn() {
 
 /**Add modal reset function */
 function resetAddModal () {
+    /**Reset the title, category, image and add file button */
     previewNewPhoto.innerHTML = "";
     titleAddModal.value = "";
     categorieAddModal.value = "";
+    btnAddFile.value = "";
 
     contentAddPhoto.style.display = "flex";
     
@@ -513,11 +517,11 @@ function postNewPhoto () {
     formData.append("category", categorieAddModal.value);
     formData.append("image", btnAddFile.files[0])
 
-    console.log("Données envoyées:", {
-        title: titleAddModal.value,
-        category : categorieAddModal.value,
-        image: btnAddFile.files[0]
-    });
+    // console.log("Données envoyées:", {
+    //     title: titleAddModal.value,
+    //     category : categorieAddModal.value,
+    //     image: btnAddFile.files[0]
+    // });
 
     /**Sending to the API */
     fetch("http://localhost:5678/api/works", {
@@ -531,11 +535,12 @@ function postNewPhoto () {
         if (!response.ok) {
             throw Error(`${response.status}`)
         }
-        // return response.json()
+        return response.json();
 
     })
-    .then(() => {
-        // console.log("Données de la nouvelle photo :", galleryData);
+    .then((galleryData) => {
+        /**Updating the gallery and closing the modal */
+        works.push(galleryData);
         createWorks();
         closeModal();
     })
