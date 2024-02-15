@@ -86,8 +86,7 @@ fetch("http://localhost:5678/api/categories")
     categories = categoriesData;
     createFilter();
     adminMode();
-    openAddModal();
-
+    
 })
 .catch(error => alert("Erreur : " + error))
 
@@ -263,6 +262,9 @@ function openFirstModal (e) {
 
     /**Call function to display content */
     displayWorksFirstModal();
+
+    /**Call function for open add modal */
+    openAddModal();
  };
 
 
@@ -349,7 +351,7 @@ function deleteWorksFirstModal(id) {
         }
     })
     .then(() => {
-        /** */
+        /**Filters the works table for deletion and updating of the latter */
         works = works.filter(work => work.id !== id);
 
         /**Remove image from modal */
